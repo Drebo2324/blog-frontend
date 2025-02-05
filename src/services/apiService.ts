@@ -126,5 +126,16 @@ class ApiService {
         }
         return ApiService.instance;
     }
+
+    //Authentication Endpoints
+    public async login(credentials: LoginRequest): Promise<AuthResponse> {
+        const response: AxiosResponse<AuthResponse> = await this.api.post('/auth/login', credentials);
+        localStorage.setItem('token', response.data.token);
+        return response.data;
+    }
+
+    public logout(): void {
+        localStorage.removeItem('token');
+    }
 }
 
