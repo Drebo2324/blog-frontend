@@ -67,8 +67,10 @@ export interface ApiError {
     }>;
 }
 
+//Axios singleton
 class ApiService {
     private api: AxiosInstance;
+    private static instance: ApiService;
 
     private constructor() {
       this.api = axios.create({
@@ -115,6 +117,14 @@ class ApiService {
             status: 500,
             message: 'An unexpeceted error has occured'
         };
+    }
+
+    //Static method to access ApiService Singleton
+    public static getInstance(): ApiService {
+        if (!ApiService.instance) {
+            ApiService.instance = new ApiService();
+        }
+        return ApiService.instance;
     }
 }
 
