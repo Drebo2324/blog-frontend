@@ -1,4 +1,8 @@
+import axios, { AxiosInstance, AxiosResponse, 
+    InternalAxiosRequestConfig, AxiosError } from "axios";
 
+
+//API Types
 export interface Category {
     id: string;
     name: string;
@@ -62,3 +66,55 @@ export interface ApiError {
       message: string;
     }>;
 }
+
+class ApiService {
+    private api: AxiosInstance;
+
+    private constructor() {
+      this.api = axios.create({
+        baseURL: '/api/v1',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      //Request interceptor to add JWT to header
+      this.api.interceptors.request.use(
+        (config: InternalAxiosRequestConfig) => {
+            const token = localStorage.getItem('token');
+            if(token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+            return config;
+        },
+        (error: AxiosError) => {
+            return Promise.reject(error);
+        }
+      );
+
+      //Response Interceptor check for 401 -> remove JWT -> redirect to login
+      this.api.interceptors.response.use(
+        (response: AxiosResponse) => response,
+        (error: AxiosError) => {
+            if (error.response?.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            }
+            return Promise.reject(this.handleError(error))
+        }
+      );
+    }
+
+    //Standardize errors -> Use backend error controller
+    private handleError(error: AxiosError): ApiError {
+        if (error.response?.data) {
+            return error.response?.data as ApiError;
+        }
+        //fallback
+        return {
+            status: 500,
+            message: 'An unexpeceted error has occured'
+        };
+    }
+}
+
