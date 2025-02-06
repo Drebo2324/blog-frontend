@@ -200,5 +200,13 @@ class ApiService {
     public async deletePost(id: string): Promise<void> {
         await this.api.delete(`/posts/${id}`);
     }
+
+    public async getDrafts(id: string): Promise<Post[]> {
+        const response: AxiosResponse<Post[]> = await this.api.get(`/posts/drafts/${id}`);
+        return response.data;
+    }
 }
+
+//Export ApiService singleton
+export const apiService = ApiService.getInstance();
 
