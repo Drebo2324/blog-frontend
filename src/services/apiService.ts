@@ -145,17 +145,32 @@ class ApiService {
     }
 
     public async createCategory(name: string): Promise<Category> {
-        const response = await this.api.post('/categories', {name});
+        const response: AxiosResponse<Category> = await this.api.post('/categories', {name});
         return response.data;
     }
 
     public async updateCategory(id: string, name: string): Promise<Category> {
-        const response = await this.api.put(`/categories/${id}`, {id, name});
+        const response: AxiosResponse<Category> = await this.api.put(`/categories/${id}`, {id, name});
         return response.data;
     }
 
     public async deleteCategory(id: string): Promise<void> {
         await this.api.delete(`/categories/${id}`);
+    }
+
+    //Tags Endpoints
+    public async getTags(): Promise<Tag[]> {
+        const response: AxiosResponse<Tag[]> = await this.api.get('/tags');
+        return response.data;
+    }
+
+    public async createTags(name: string): Promise<Tag[]> {
+        const response: AxiosResponse<Tag[]> = await this.api.post('/tags', {name});
+        return response.data;
+    }
+
+    public async deleteTag(id: string): Promise<void> {
+        await this.api.delete(`/tags/${id}`);
     }
 }
 
