@@ -137,5 +137,25 @@ class ApiService {
     public logout(): void {
         localStorage.removeItem('token');
     }
+
+    //Category Endpoints
+    public async getCategories(): Promise<Category[]> {
+        const response: AxiosResponse<Category[]> = await this.api.get('/categories');
+        return response.data;
+    }
+
+    public async createCategory(name: string): Promise<Category> {
+        const response = await this.api.post('/categories', {name});
+        return response.data;
+    }
+
+    public async updateCategory(id: string, name: string): Promise<Category> {
+        const response = await this.api.put(`/categories/${id}`, {id, name});
+        return response.data;
+    }
+
+    public async deleteCategory(id: string): Promise<void> {
+        await this.api.delete(`/categories/${id}`);
+    }
 }
 
