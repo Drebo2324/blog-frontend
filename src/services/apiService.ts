@@ -172,5 +172,33 @@ class ApiService {
     public async deleteTag(id: string): Promise<void> {
         await this.api.delete(`/tags/${id}`);
     }
+
+    //Post Endpoints
+    public async getPosts(params: {
+        categoryId?: string;
+        tagId?: string;
+    }): Promise<Post[]> {
+        const response: AxiosResponse<Post[]> = await this.api.get('/posts', {params});
+        return response.data;
+    }
+
+    public async getPost(id: string): Promise<Post> {
+        const response: AxiosResponse<Post> = await this.api.get(`/posts/${id}`);
+        return response.data;
+    }
+
+    public async createPost(post: CreatePostRequest): Promise<Post> {
+        const response: AxiosResponse<Post> = await this.api.post('/posts', post);
+        return response.data;
+    }
+
+    public async updatePost(id: string, post: UpdatePostRequest): Promise<Post> {
+        const response: AxiosResponse<Post> = await this.api.put(`/posts/${id}`, post);
+        return response.data;
+    }
+
+    public async deletePost(id: string): Promise<void> {
+        await this.api.delete(`/posts/${id}`);
+    }
 }
 
